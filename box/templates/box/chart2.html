@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Título da página</title>
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="{% static '/box/js/canvasjs.min.js' %}"></script>
+  </head>
+  <body>
+    <div id="chartContainer1" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+    <div id="chartContainer2" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+    <div id="chartContainer3" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+    <div id="chartContainer4" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+  </body>
+  <script>
+    $(document).ready(function(){
+        $.ajax({
+            url: "?id=1&tipo=IPCA com Juros Semestrais&vencimento=15/05/2035&periodo=1300",
+            type: 'get',
+            success: function(data_plot){
+                json_data = JSON.parse(data_plot);
+                var chart = new CanvasJS.Chart("chartContainer4", {
+                    title:{
+                        text: "Tesouro IPCA+ 2035"              
+                    },
+                    data: [              
+                    {
+                        type: "line",
+                        dataPoints: json_data['data_plot']['curva_preco']
+                    }
+                    ]
+                });
+                chart.render();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                var errorMsg = 'Ajax request failed: ' + xhr.responseText;
+                $('#content').html(errorMsg);
+              }
+        });
+    });    
+    </script>
+</html>
